@@ -3,7 +3,7 @@
 软件技术专业 · 前端开发方向。一个纯静态的个人主页：语义化 HTML5 结构 + CSS 变量与响应式布局 + 原生 JavaScript 交互，
 用 GitHub Actions 做「自检通过才发布」的 CI/CD 流水线。
 
-线上地址：<https://niewei163.github.io/20260928_Resume_CICD_DMX/>
+线上地址：<https://karina427.github.io/20260928_Resume_CICD_DMX/>
 
 ## 目录结构
 
