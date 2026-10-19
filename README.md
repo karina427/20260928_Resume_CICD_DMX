@@ -3,7 +3,21 @@
 软件技术专业 · 前端开发方向。一个纯静态的个人主页：语义化 HTML5 结构 + CSS 变量与响应式布局 + 原生 JavaScript 交互，
 用 GitHub Actions 做「自检通过才发布」的 CI/CD 流水线。
 
-线上地址：<https://karina427.github.io/20260928_Resume_CICD_DMX/>
+线上地址（双通道，内容一致）：
+
+- CI/CD 自动发布：<https://karina427.github.io/20260928_Resume_CICD_DMX/>
+- surge 手动发布：<https://huangjunjie-20260928.surge.sh/>
+
+Pages 那条每次 push 自动更新；surge 那条需要手动重发一次（只发页面文件，不带课程资料）：
+
+```bash
+# 在仓库根目录执行
+npx surge ./index.html ./styles.css ./app.js ./works-data.js ./works-render.js ./assets \
+  --domain huangjunjie-20260928.surge.sh
+```
+
+> 第一次用会被要求填邮箱和密码注册，之后凭据存在 `~/.netrc`，`npx surge` 直接发布即可。
+> surge 的账号和 GitHub 账号是两套东西，不通用。
 
 ## 目录结构
 
