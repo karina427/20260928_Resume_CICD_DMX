@@ -1,9 +1,9 @@
-# 聂葳 · 个人主页（简历站点 + CI/CD）
+# 黄俊杰 · 个人主页（简历站点 + CI/CD）
 
 软件技术专业 · 前端开发方向。一个纯静态的个人主页：语义化 HTML5 结构 + CSS 变量与响应式布局 + 原生 JavaScript 交互，
 用 GitHub Actions 做「自检通过才发布」的 CI/CD 流水线。
 
-线上地址：<https://niewei163.github.io/20260928_Resume_CICD_DMX/>
+线上地址：<https://huangjunjie.github.io/20260928_Resume_CICD_DMX/>
 
 ## 目录结构
 
@@ -68,6 +68,7 @@ git push main
 
 ## 可继续优化的地方
 
-- `assets/` 里的作品封面目前是课程示例图，换成自己项目的真实截图更准确。
+- `assets/cover-01.svg` ~ `cover-04.svg` 是按课程主题手写的封面图（纯 SVG，几 KB，改配色只改其中 `fill`）。
+  有自己项目的真实截图后，把 `works-data.js` 里的 `image` 和 `index.html` 里对应的 `<img>` 换掉即可。
 - 头像 `assets/avatar.svg` 是占位插画，可换成自己的照片（记得同步修改 `alt`）。
 - 后续进入 Vue 后，可把 `works-data.js` + `works-render.js` 这一对迁成一个列表组件。

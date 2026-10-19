@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" role="img" aria-label="页面交互第 4 课的封面">
+  <defs>
+    <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e9efe8"/>
+      <stop offset="1" stop-color="#d9e4dc"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#g2)"/>
+  <g opacity="0.16" fill="none" stroke="#254a40" stroke-width="2">
+    <circle cx="900" cy="420" r="70"/><circle cx="900" cy="420" r="120"/><circle cx="900" cy="420" r="170"/>
+  </g>
+  <rect x="0" y="0" width="1200" height="10" fill="#254a40" opacity="0.85"/>
+  <text x="90" y="120" font-family="Georgia, 'Times New Roman', serif" font-size="26" letter-spacing="6" fill="#7c6348">LESSON 04</text>
+  <text x="88" y="470" font-family="'Songti SC', SimSun, serif" font-size="150" font-weight="600" fill="#254a40">页面交互</text>
+  <text x="92" y="540" font-family="Georgia, serif" font-size="34" letter-spacing="3" fill="#6d746d">Scroll · Progress · Highlight</text>
+  <rect x="90" y="600" width="520" height="2" fill="#b8a27d"/>
+  <text x="90" y="660" font-family="'Songti SC', SimSun, serif" font-size="30" fill="#7c6348">阅读进度条 · 导航高亮 · 返回顶部</text>
+</svg>

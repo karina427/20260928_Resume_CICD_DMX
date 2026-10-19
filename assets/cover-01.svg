@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" role="img" aria-label="个人主页第 3 课的封面">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7f3e8"/>
+      <stop offset="1" stop-color="#e6eadd"/>
+    </linearGradient>
+    <linearGradient id="line1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#b8a27d"/>
+      <stop offset="1" stop-color="#b8a27d" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#g1)"/>
+  <circle cx="960" cy="180" r="260" fill="#254a40" opacity="0.05"/>
+  <circle cx="180" cy="700" r="200" fill="#b8a27d" opacity="0.10"/>
+  <text x="90" y="120" font-family="Georgia, 'Times New Roman', serif" font-size="26" letter-spacing="6" fill="#7c6348">LESSON 03</text>
+  <text x="88" y="470" font-family="'Songti SC', SimSun, serif" font-size="150" font-weight="600" fill="#254a40">个人主页</text>
+  <text x="92" y="540" font-family="Georgia, serif" font-size="34" letter-spacing="3" fill="#6d746d">Semantic HTML · Responsive CSS</text>
+  <rect x="90" y="600" width="520" height="2" fill="url(#line1)"/>
+  <text x="90" y="660" font-family="'Songti SC', SimSun, serif" font-size="30" fill="#7c6348">语义化结构 · 两列 / 一列布局</text>
+</svg>

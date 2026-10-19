@@ -359,3 +359,288 @@ footer { border-top: 1px solid var(--line); padding: 25px 0; }
 @media (max-width: 640px) {
   .works-sort { margin-left: 0; }
 }
+
+/* ════════════════════════════════════════════════════════════════
+   视觉美化层
+   ════════════════════════════════════════════════════════════════
+   这里只加"看得见的细节"，不改结构、不加 JS 依赖：
+     · 首屏分层入场、头像轻浮动
+     · 导航下划线生长、标题装饰线
+     · 作品卡片光带扫过、标签错峰弹出
+     · 进度条光晕、返回顶部旋转
+   全部动画都可以被系统的"减少动态效果"一键关掉，见文件末尾。
+   配色只取 --gold / --heading / --accent 三色，不引入新色系。
+   ════════════════════════════════════════════════════════════════ */
+
+/* ---------- 1. 背景与文字选区 ---------- */
+
+/* 两层极淡的径向渐变，让米色底不再是一块死板的纯色。
+   background-attachment: fixed 让渐变跟着视口走，滚动时不会"拖影"。 */
+body {
+  background:
+    radial-gradient(1100px 520px at 10% -10%, #eef2ea 0%, transparent 62%),
+    radial-gradient(900px 460px at 98% 2%, #f7f0e3 0%, transparent 58%),
+    var(--background);
+  background-attachment: fixed;
+}
+
+/* 选中文字时用主色底，比系统默认的蓝更贴合整页配色 */
+::selection { background: var(--heading); color: #fff; }
+
+/* ---------- 2. 首屏分层入场 ---------- */
+/* 三个元素依次浮现：标题 → 身份 → 学习方向。
+   用 both 让动画结束后停在最后一帧（否则会闪回初始状态）。 */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero-copy > * { animation: fadeUp .75s cubic-bezier(.22, .61, .36, 1) both; }
+.hero-copy h1        { animation-delay: .06s; }
+.hero-copy .hero-role { animation-delay: .18s; }
+.hero-copy .hero-school { animation-delay: .28s; }
+
+/* 头像单独用缩放淡入，比位移更"稳"，不会让人以为在晃动。
+   完整的三段动画（入场 + 浮动 + 光圈）在下面的第 3 节统一声明。 */
+@keyframes fadeScale {
+  from { opacity: 0; transform: scale(.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* 学习方向与资料卡比标题晚一拍出现，形成阅读顺序 */
+.research-direction { animation: fadeUp .7s cubic-bezier(.22, .61, .36, 1) .36s both; }
+.profile-details    { animation: fadeUp .7s cubic-bezier(.22, .61, .36, 1) .44s both; }
+
+/* ---------- 3. 头像：轻浮动 + 呼吸光圈 ---------- */
+/* 位移只有 5px，慢到 7 秒一轮，作用是"活着"而不是"吸引注意力" */
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-5px); }
+}
+@keyframes ringPulse {
+  0%   { box-shadow: 0 12px 32px #3444390b, 0 0 0 0 rgba(184, 162, 125, .42); }
+  70%  { box-shadow: 0 12px 32px #3444390b, 0 0 0 16px rgba(184, 162, 125, 0); }
+  100% { box-shadow: 0 12px 32px #3444390b, 0 0 0 0 rgba(184, 162, 125, 0); }
+}
+/* 入场动画结束后再接上无限循环的浮动（同一个元素上两段动画用逗号并列） */
+.hero-visual figure {
+  animation:
+    fadeScale .8s cubic-bezier(.22, .61, .36, 1) .1s both,
+    floatY 7s ease-in-out 1s infinite,
+    ringPulse 3.6s ease-out 1.2s infinite;
+  transition: box-shadow .4s ease;
+}
+
+/* ---------- 4. 导航：下划线从中间长出来 ---------- */
+nav a { position: relative; }
+nav a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -7px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), #d8c6a4);
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform .32s cubic-bezier(.22, .61, .36, 1);
+}
+nav a:hover { text-decoration: none; }
+nav a:hover::after,
+nav a.is-current::after { transform: scaleX(1); }
+/* 当前项改成主色加粗 + 下划线动画，不再用 text-decoration，避免两条线打架 */
+nav a.is-current {
+  color: var(--heading);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* ---------- 5. 栏目标题：装饰线随栏目进入视口展开 ---------- */
+.section-heading h2 { position: relative; }
+.section-heading h2::after {
+  content: '';
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 4px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold), rgba(184, 162, 125, 0));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .9s cubic-bezier(.22, .61, .36, 1) .12s;
+}
+.section.is-visible .section-heading h2::after { transform: scaleX(1); }
+
+/* ---------- 6. 作品卡片：光带扫过 + 描边亮起 ---------- */
+.work-cover { position: relative; }
+/* 一条倾斜的白色高光，默认停在左侧看不见的位置，悬停时横穿封面 */
+.work-cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 34%, rgba(255, 255, 255, .5) 50%, transparent 66%);
+  transform: translateX(-130%);
+  transition: transform .85s cubic-bezier(.22, .61, .36, 1);
+  pointer-events: none;
+  z-index: 1;
+}
+.work-card > a:hover .work-cover::after { transform: translateX(130%); }
+.work-card > a { transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease; }
+.work-card > a:hover {
+  border-color: var(--gold);
+  box-shadow: 0 18px 42px rgba(52, 68, 57, .12);
+}
+/* 封面放大从 1.018 提到 1.045，配合光带才有"翻一下"的手感 */
+.work-card > a:hover img { transform: scale(1.045); }
+
+/* 卡片进视口时错峰浮现：每张晚 70ms，像发牌一样铺开 */
+.section.is-visible .portfolio-list > li { animation: fadeUp .6s cubic-bezier(.22, .61, .36, 1) both; }
+.section.is-visible .portfolio-list > li:nth-child(2) { animation-delay: .07s; }
+.section.is-visible .portfolio-list > li:nth-child(3) { animation-delay: .14s; }
+.section.is-visible .portfolio-list > li:nth-child(4) { animation-delay: .21s; }
+
+/* ---------- 7. 标签按钮：错峰弹出 + 按下去的反馈 ---------- */
+@keyframes pop {
+  from { opacity: 0; transform: scale(.88); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.works-tags button { animation: pop .32s cubic-bezier(.22, .61, .36, 1) both; }
+.works-tags button:nth-child(2) { animation-delay: .03s; }
+.works-tags button:nth-child(3) { animation-delay: .06s; }
+.works-tags button:nth-child(4) { animation-delay: .09s; }
+.works-tags button:nth-child(5) { animation-delay: .12s; }
+.works-tags button:nth-child(6) { animation-delay: .15s; }
+.works-tags button:nth-child(7) { animation-delay: .18s; }
+.works-tags button:nth-child(8) { animation-delay: .21s; }
+.works-tags button:nth-child(9) { animation-delay: .24s; }
+.works-tags button:active { transform: scale(.95); }
+.works-tags button[aria-pressed="true"] { box-shadow: 0 6px 16px rgba(37, 74, 64, .22); }
+
+/* ---------- 8. 阅读进度条：光晕收尾 ---------- */
+.reading-progress {
+  background: linear-gradient(90deg, #8a7355, var(--gold) 45%, var(--accent) 78%, var(--heading));
+  box-shadow: 0 1px 10px rgba(184, 162, 125, .5);
+  border-radius: 0 2px 2px 0;
+}
+
+/* ---------- 9. 右下角两件小东西 ---------- */
+.section-indicator { box-shadow: 0 8px 20px rgba(37, 74, 64, .18); }
+.to-top { transition: opacity .25s, transform .25s, background .2s, box-shadow .3s; }
+.to-top:hover {
+  background: var(--heading-wash);
+  box-shadow: 0 8px 20px rgba(52, 68, 57, .16);
+}
+/* 悬停时箭头轻轻抬起并旋转，暗示"向上" */
+.to-top:hover { transform: translateY(-3px) rotate(-8deg); }
+
+/* ---------- 10. 正文链接：下划线从左滑出 ---------- */
+.profile-details a,
+.references a,
+.experience-detail a {
+  position: relative;
+  text-decoration: none;
+  background-image: linear-gradient(var(--gold), var(--gold));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0 1px;
+  transition: background-size .35s cubic-bezier(.22, .61, .36, 1), color .2s;
+}
+.profile-details a:hover,
+.references a:hover,
+.experience-detail a:hover { background-size: 100% 1px; }
+
+/* ---------- 11. 技能条与列表的微反馈 ---------- */
+.skills-list li { transition: border-color .3s ease; }
+.skills-list li:hover { border-top-color: var(--gold); }
+.skills-list li:hover strong { color: var(--accent); }
+.skills-list strong { transition: color .3s ease; }
+
+.teaching-group li,
+.references li { transition: color .25s ease; }
+.teaching-group li:hover,
+.references li:hover { color: var(--heading); }
+
+/* ---------- 12. 尊重系统的"减少动态效果" ---------- */
+/* 用户开了这个开关，通常是有前庭功能方面的不适，动画必须全部停掉，
+   但**元素要照常显示**——所以只是 animation: none，不改 opacity。 */
+@media (prefers-reduced-motion: reduce) {
+  .hero-copy > *,
+  .hero-visual figure,
+  .research-direction,
+  .profile-details,
+  .section.is-visible .portfolio-list > li,
+  .works-tags button {
+    animation: none !important;
+  }
+  .hero-visual figure {
+    box-shadow: 0 12px 32px #3444390b;
+    transition: none;
+  }
+  .work-cover::after { display: none; }
+  nav a::after { transition: none; }
+}
+
+/* ---------- 13. 打印时只留内容，不留动效 ---------- */
+@media print {
+  body { background: #fff; }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    box-shadow: none !important;
+  }
+  .work-cover::after { display: none; }
+}
+
+/* ---------- 14. 首屏装饰：头像外圈缓慢旋转的柔光 ---------- */
+/* 一个 conic-gradient 做成"半边亮"的光环，模糊后当光晕用；
+   旋转 14 秒一圈，几乎察觉不到在动，但页面不"死"。
+   只在桌面宽度下开启：手机上头像绝对定位贴着右边，光晕会顶出横向滚动条。 */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@media (min-width: 641px) {
+  .hero-visual { position: relative; }
+  .hero-visual::before {
+    content: '';
+    position: absolute;
+    inset: -20px;
+    border-radius: 50%;
+    background: conic-gradient(
+      from 0deg,
+      rgba(184, 162, 125, 0) 0deg,
+      rgba(184, 162, 125, .5) 90deg,
+      rgba(37, 74, 64, .28) 200deg,
+      rgba(184, 162, 125, 0) 360deg
+    );
+    filter: blur(16px);
+    opacity: .68;
+    animation: spin 14s linear infinite;
+    z-index: 0;
+  }
+  .hero-visual figure { position: relative; z-index: 1; }
+}
+
+/* 英文名用古铜色，和中文名的墨绿拉开层次 */
+h1 span { color: #8a7355; }
+
+/* 减少动态效果时，柔光保留静态、只停旋转 */
+@media (prefers-reduced-motion: reduce) {
+  .hero-visual::before { animation: none !important; }
+}
+
+/* ---------- 15. 极淡的纸纹底 ---------- */
+/* 22px 一格的网点，透明度只有 5.5%，远看是"纸有线感"，近看不会干扰文字。
+   z-index:-1 让它落在内容之下、页面底色之上。 */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(52, 68, 57, .055) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+@media print { body::before { display: none; } }

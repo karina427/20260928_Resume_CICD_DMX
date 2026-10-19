@@ -31,7 +31,7 @@ function createWorkCard(work) {
   const image = document.createElement('img')
   image.src = work.image
   // alt 要说清楚图上是什么，不能只写"图片"
-  image.alt = `${work.title}的网页截图`
+  image.alt = `${work.title}的封面图`
   // 写死宽高是为了让浏览器提前留好位置，图片加载时页面不会"跳一下"
   image.width = 1200
   image.height = 800
