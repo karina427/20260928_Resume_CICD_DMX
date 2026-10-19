@@ -70,5 +70,5 @@ git push main
 
 - `assets/cover-01.svg` ~ `cover-04.svg` 是按课程主题手写的封面图（纯 SVG，几 KB，改配色只改其中 `fill`）。
   有自己项目的真实截图后，把 `works-data.js` 里的 `image` 和 `index.html` 里对应的 `<img>` 换掉即可。
-- 头像 `assets/avatar.svg` 是占位插画，可换成自己的照片（记得同步修改 `alt`）。
+- 头像用的是 `assets/avatar.jpg`（440×440，由原图 1056×992 居中裁切 808×808 后压缩，约 33KB），换图时记得同步修改 `alt`。
 - 后续进入 Vue 后，可把 `works-data.js` + `works-render.js` 这一对迁成一个列表组件。
