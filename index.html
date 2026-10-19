@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- ═══ 基础信息 ═══════════════════════════════════════════════
+       整个站点只有这一个 HTML 页面。改内容时按注释找到对应 section 即可，
+       不需要动 CSS 和 JS —— 结构、样式、行为三者分开维护。      -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="聂葳（Nie Wei）的个人主页：软件技术专业在读，前端开发方向，记录学习、项目与作品。">
+  <meta name="author" content="聂葳">
+  <title>聂葳 Nie Wei · 个人主页</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- 三个脚本都用 defer：等 HTML 解析完再执行，不会阻塞首屏渲染。
+       数据（works-data）在前，渲染（works-render）在后，交互（app.js）最后。 -->
+  <script src="works-data.js" defer></script>
+  <script src="works-render.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+
+<body>
+  <!-- 键盘用户按 Tab 第一下就能跳过导航直达正文（无障碍基础）。 -->
+  <a class="skip-link" href="#main">跳到正文</a>
+
+  <!-- 顶部阅读进度条，宽度由 app.js 的 updateProgress() 控制。 -->
+  <div class="reading-progress" id="reading-progress"></div>
+
+  <!-- ═══ 顶部导航 ═══════════════════════════════════════════════
+       导航用的是原生锚点链接（# 加栏目 id），不依赖 JS 也能跳转；
+       app.js 只负责高亮"当前在哪一节"。                            -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#about">聂葳 <span>Nie Wei</span></a>
+      <nav aria-label="主导航">
+        <a href="#about">关于</a>
+        <a href="#experience">经历</a>
+        <a href="#projects">项目</a>
+        <a href="#skills">技能</a>
+        <a href="#portfolio">作品</a>
+        <a href="#teaching">实践</a>
+        <a href="#publications">记录</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ── 首屏：姓名、身份、方向、联系方式 ───────────────────── -->
+    <section class="hero" id="about">
+      <div class="container">
+        <div class="hero-top">
+          <div class="hero-copy">
+            <h1>聂葳 <span>Nie Wei</span></h1>
+            <p class="hero-role">软件技术专业学生 · 前端开发方向</p>
+            <p class="hero-school">广东科学技术职业学院 · 大模型应用开发班</p>
+          </div>
+          <div class="hero-visual">
+            <figure>
+              <img src="assets/avatar.svg" alt="聂葳的个人头像插画" width="220" height="220">
+            </figure>
+          </div>
+        </div>
+
+        <div class="research-direction" id="research-direction">
+          <span class="eyebrow">学习方向</span>
+          <p>
+            用 <strong>HTML5 + CSS3 + 原生 JavaScript</strong> 手写结构清晰、可维护的静态站点；
+            正在把 <strong>Git、GitHub Actions 与 CI/CD</strong> 接进自己的个人主页，
+            让每次改动都能自动自检、自动发布。
+          </p>
+        </div>
+
+        <div class="profile-details">
+          <div>
+            <span>学习阶段</span>
+            <p>在读</p>
+          </div>
+          <div>
+            <span>所在城市</span>
+            <p>广东珠海</p>
+          </div>
+          <div>
+            <span>联系</span>
+            <p>
+              <a href="https://github.com/NieWei163" target="_blank" rel="noopener noreferrer">github.com/NieWei163</a>
+            </p>
+          </div>
+          <div>
+            <span>学校</span>
+            <p>广东科学技术职业学院（珠海校区）</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 教育与学习经历 ───────────────────────────────────────
+         新增一条：复制一个 .experience-item 整块即可。             -->
+    <section class="section" id="experience">
+      <div class="container">
+        <header class="section-heading">
+          <h2>教育与学习经历</h2>
+        </header>
+        <div class="section-content">
+          <div class="experience-item">
+            <p class="experience-heading">
+              <strong>广东科学技术职业学院 · 软件技术专业</strong>
+              <time>在读</time>
+            </p>
+            <p class="experience-detail">
+              系统性学习网页开发：从语义化 HTML、CSS 布局，到 JavaScript 交互与项目部署。
+            </p>
+          </div>
+          <div class="experience-item">
+            <p class="experience-heading">
+              <strong>大模型应用开发班 · 《前端框架应用开发》</strong>
+              <time>2026 年秋季学期</time>
+            </p>
+            <p class="experience-detail">
+              每周一个可运行的小项目，从手写静态页到 Git 版本管理、GitHub Pages / surge 部署，
+              再到 GitHub Actions 的 CI/CD 自动发布。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 项目经历 ─────────────────────────────────────────────
+         每条用 article 包一个项目：标题带时间，正文写"做了什么 + 用了什么"。 -->
+    <section class="section" id="projects">
+      <div class="container">
+        <header class="section-heading">
+          <h2>项目经历</h2>
+        </header>
+        <div class="section-content">
+          <article class="research-item">
+            <h3><time>2026.09</time>个人主页（第 3 课）</h3>
+            <p>
+              从课程模板出发重写页面结构：用语义化标签（header / nav / main / section / article / time）
+              组织内容，用 CSS 变量统一配色与字号，用媒体查询把作品卡片在桌面端排成两列、手机端收成一列。
+            </p>
+          </article>
+
+          <article class="research-item">
+            <h3><time>2026.09</time>页面交互与作品渲染（第 4–5 课）</h3>
+            <p>
+              原生 JavaScript 实现阅读进度条、滚动高亮当前栏目、返回顶部按钮；
+              作品列表改为「数据与视图分离」——标题、封面、标签全部存在 works-data.js，
+              页面通过筛选标签与按年份排序动态渲染，新增作品不用改 HTML。
+            </p>
+          </article>
+
+          <article class="research-item">
+            <h3><time>2026.09</time>简历站点 CI/CD 自动发布（第 5 课）</h3>
+            <p>
+              基于课程套件搭建 GitHub Actions 流水线：push 到 main 后先跑 <code>node tools/check-page.mjs</code>
+              做自检（必备文件、本地引用、页内锚点、图片 alt），只有自检通过才打包发布到 GitHub Pages，
+              把「改完直接传」变成「检查通过才上线」。
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 技能：三栏，每栏一个 <li> ─────────────────────────── -->
+    <section class="section" id="skills">
+      <div class="container">
+        <header class="section-heading">
+          <h2>技能与实践</h2>
+        </header>
+        <div class="section-content">
+          <ul class="skills-list">
+            <li>
+              <strong>网页内容</strong>
+              语义化 HTML5、表单与锚点、图片 alt 与 aria 属性等可访问性基础。
+            </li>
+            <li>
+              <strong>页面样式</strong>
+              CSS3 变量、Flex 与 Grid 布局、媒体查询响应式、字体与配色体系。
+            </li>
+            <li>
+              <strong>开发过程</strong>
+              Git / GitHub 版本管理、GitHub Pages 与 surge 部署、GitHub Actions CI/CD、Node 自检脚本。
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 作品门户 ─────────────────────────────────────────────
+         有 JS 时：列表由 works-data.js 渲染，支持标签筛选与年份排序；
+         没有 JS 时：下面的静态卡片照常显示（渐进增强）。             -->
+    <section class="section" id="portfolio">
+      <div class="container">
+        <header class="section-heading">
+          <h2>作品门户</h2>
+          <p class="works-notice">课程作业逐步替换为自己的作品，点击卡片查看线上页面。</p>
+        </header>
+
+        <div class="works-toolbar">
+          <div class="works-tags" id="works-tags"></div>
+          <button class="works-sort" id="works-sort" type="button">按年份：新→旧</button>
+        </div>
+
+        <ol class="portfolio-list">
+          <li class="work-card work-blog">
+            <a href="https://niewei163.github.io/resume20260921_DMX/" target="_blank" rel="noopener noreferrer">
+              <div class="work-cover">
+                <img src="assets/work-blog.png" alt="个人主页第 3 课的网页截图" width="1200" height="800" decoding="async">
+              </div>
+              <div class="work-copy">
+                <h3>个人主页 · 第 3 课</h3>
+                <p>语义化结构、CSS 变量与响应式两列布局。</p>
+              </div>
+            </a>
+          </li>
+          <li class="work-card work-community">
+            <a href="https://niewei163.github.io/resume20260921_DMX/#portfolio" target="_blank" rel="noopener noreferrer">
+              <div class="work-cover">
+                <img src="assets/work-community.png" alt="页面交互练习第 4 课的网页截图" width="1200" height="800" decoding="async">
+              </div>
+              <div class="work-copy">
+                <h3>页面交互 · 第 4 课</h3>
+                <p>阅读进度条、导航高亮与返回顶部。</p>
+              </div>
+            </a>
+          </li>
+          <li class="work-card work-greeting-card">
+            <a href="https://niewei163.github.io/resume20260921_DMX/#portfolio" target="_blank" rel="noopener noreferrer">
+              <div class="work-cover">
+                <img src="assets/work-greeting-card.png" alt="作品筛选与排序第 5 课的网页截图" width="1200" height="800" decoding="async">
+              </div>
+              <div class="work-copy">
+                <h3>作品筛选 · 第 5 课</h3>
+                <p>数据与视图分离，标签筛选与年份排序。</p>
+              </div>
+            </a>
+          </li>
+          <li class="work-card work-music-station">
+            <a href="https://niewei163.github.io/20260928_Resume_CICD_DMX/" target="_blank" rel="noopener noreferrer">
+              <div class="work-cover">
+                <img src="assets/work-music-station.png" alt="简历站点 CI/CD 发布后的线上页面截图" width="1200" height="800" decoding="async">
+              </div>
+              <div class="work-copy">
+                <h3>简历站点 · CI/CD</h3>
+                <p>Actions 自检通过后自动发布到 Pages。</p>
+              </div>
+            </a>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ── 学习与实践 ─────────────────────────────────────────── -->
+    <section class="section" id="teaching">
+      <div class="container">
+        <header class="section-heading">
+          <h2>学习与实践</h2>
+        </header>
+        <div class="section-content">
+          <div class="teaching-group">
+            <h3>本学期目标</h3>
+            <ol>
+              <li>每次课完成一个可运行的小改动，并推到自己的远程仓库。</li>
+              <li>能逐行解释自己写的 HTML、CSS 和 JavaScript，而不只是让页面"看起来对"。</li>
+              <li>把 CI/CD 跑通：自检不过就不发布，养成上线前先验证的习惯。</li>
+              <li>进入 Vue 框架学习，把现在的原生写法迁移到组件化开发。</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 学习记录：按时间倒序，最新在最上面 ─────────────────── -->
+    <section class="section" id="publications">
+      <div class="container">
+        <header class="section-heading">
+          <h2>学习记录</h2>
+        </header>
+        <div class="section-content">
+          <div class="publication-group">
+            <h3>课程节点</h3>
+            <ol class="references">
+              <li>2026-09-28　CI/CD 流水线跑通：check 自检 + deploy 发布到 GitHub Pages。</li>
+              <li>2026-09-21　完成响应式布局，掌握媒体查询与两列 / 一列切换。</li>
+              <li>2026-09-14　Git 基础：clone、add、commit、push，建立远程仓库并部署 Pages。</li>
+              <li>2026-09-07　第一次课：搭好四类教学平台与开发环境，完成页面初稿。</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 右下角徽标与返回顶部按钮：默认不显示，由 app.js 控制状态。 -->
+  <p class="section-indicator" id="section-indicator" aria-live="polite"></p>
+  <button class="to-top" id="to-top" type="button" aria-label="返回页面顶部">↑</button>
+
+  <footer>
+    <div class="container footer-inner">
+      <a href="#about">回到顶部</a>
+      <a href="#portfolio">作品门户</a>
+    </div>
+  </footer>
+</body>
+</html>
