@@ -1,30 +1,73 @@
-# 第 06 课｜学生课堂工程
+# 聂葳 · 个人主页（简历站点 + CI/CD）
 
-> 从这里开始：先阅读 [本课操作手册](课堂资料/本课操作手册.md)，完成每一步的“自己验证”后再继续。
+软件技术专业 · 前端开发方向。一个纯静态的个人主页：语义化 HTML5 结构 + CSS 变量与响应式布局 + 原生 JavaScript 交互，
+用 GitHub Actions 做「自检通过才发布」的 CI/CD 流水线。
 
-- 跟不上或上一课没有完成：走手册中的**路线 B**。
-- 要保留上一课个人作品：走手册中的**路线 A**，先预演续课工具。
-- 基础 TODO 必须先独立完成；自检通过后才能进行 AI 复盘。
+线上地址：<https://niewei163.github.io/20260928_Resume_CICD_DMX/>
 
----
+## 目录结构
 
-## 原工程说明
+```
+.
+├── index.html            页面结构（唯一需要改内容的文件）
+├── styles.css            样式：配色变量、布局、响应式与打印样式
+├── works-data.js         作品数据（增删作品只改这里）
+├── works-render.js       把作品数据渲染成卡片 + 标签筛选 + 年份排序
+├── app.js                交互：进度条、导航高亮、返回顶部
+├── assets/               头像、图标、字体、作品封面
+├── tools/check-page.mjs  上线前自检脚本（本地和 Actions 共用同一份）
+└── .github/workflows/
+    └── pages.yml         GitHub Actions：check → deploy
+```
 
-# 第 6 课教师答案
+**维护原则**：结构、样式、数据、行为各自独立。
+改文案只动 `index.html`；加作品只动 `works-data.js`；换配色只动 `styles.css` 顶部的 `:root` 变量。
 
-本课是操作验收题。逐项参考结果如下；网址、时间和截图必须来自自己的实际运行，不能照抄教师记录。
+## 本地开发
 
-|任务|具体操作位置|参考结果|
-|---|---|---|
-|TODO 01|工程根目录执行 `node tools/check-page.mjs`|检查通过、退出码 0|
-|TODO 02|在个人验收副本的 index.html 暂时去掉一个图片 alt 属性|同一检查失败并提示缺失 alt；不要提交为正式作品|
-|TODO 03|把该图片的说明性 alt 属性补回原处|再次运行同一检查恢复通过|
-|TODO 04|浏览器切换手机尺寸并打开打印预览|无横向溢出、文字可读、作品链接可操作；按手册调整对应 CSS 后重测|
-|TODO 05|个人 GitHub 仓库 Settings → Pages，选择 GitHub Actions；使用本工程 .github 中的工作流|对应提交的检查和部署作业通过，访问该次部署给出的 URL|
-|TODO 06|只在个人练习分支重复缺少 alt 的故障并推送；观察 Actions 后再修复推送|坏提交检查失败且不发布；修复提交检查通过并发布。当地自检失败不等于已验证远程 Actions|
+```bat
+:: 启动本地服务器（必须用服务器打开，直接双击 file:// 会让相对路径和字体出问题）
+npx live-server --port=7000 --host=0.0.0.0
 
-对照代码在本目录的 `tools/check-page.mjs`、`.github/workflows`、`index.html` 和样式文件中。不要复制别人的 Actions 日志当答案。
+:: 上线前自检
+node tools/check-page.mjs
+```
 
-合格问题记录必须包含：重现步骤、实际现象、涉及文件、修复内容、同一步骤重测结果。
+自检做四件事，都是人眼容易漏、机器一秒能查的：
 
-最终检查：资料、图片、链接、手机布局、导航状态、作品数组、Git 提交和 Pages 网址均正常。提交说明应写清修复原因与结果。
+1. 必备文件是否存在（`index.html` / `styles.css` / `app.js`）；
+2. `index.html` 引用的本地文件是否真的存在；
+3. 页内锚点 `#id` 是否有对应元素（导航不能点了没反应）；
+4. 每张图片是否有**有意义**的 `alt`（空值或「图片」这类笼统写法都会报错）。
+
+## CI/CD 流程
+
+```
+git push main
+      │
+      ▼
+  check ── 跑 node tools/check-page.mjs ── 失败则整条流水线停在这里，线上不受影响
+      │ needs: check
+      ▼
+  deploy ── 打包整个目录 ── 上传 artifact ── 发布到 GitHub Pages
+```
+
+- 触发条件：推送到 `main`，或在 Actions 页面手动 `Run workflow`（工作流里写了 `workflow_dispatch`）。
+- 仓库设置：**Settings → Pages → Source 必须选 GitHub Actions**。
+  保持默认的「Deploy from a branch」会跳过检查直接把文件发出去，等于没有 CI。
+- 同一次发布用 `concurrency: pages` 串行执行，避免两次部署互相覆盖。
+
+## 需要人工完成的三个动作
+
+代码和流水线都已在本地就绪，以下步骤依赖你自己的 GitHub 账号，需要在浏览器里点：
+
+1. 打开 <https://github.com/new>，仓库名填 `20260928_Resume_CICD_DMX`，**不要**勾选初始化 README。
+2. 在项目目录执行首次推送：`git push -u origin main`（`origin` 已配置好）。
+3. 仓库 Settings → Pages → Source 选 **GitHub Actions**；再到 Actions 页手动跑一次
+   「检查并发布个人主页」，等 `check`、`deploy` 两个任务都变绿。
+
+## 可继续优化的地方
+
+- `assets/` 里的作品封面目前是课程示例图，换成自己项目的真实截图更准确。
+- 头像 `assets/avatar.svg` 是占位插画，可换成自己的照片（记得同步修改 `alt`）。
+- 后续进入 Vue 后，可把 `works-data.js` + `works-render.js` 这一对迁成一个列表组件。
